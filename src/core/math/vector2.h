@@ -35,15 +35,16 @@ public:
     }
 
     // cross product
-    Vector2 operator^(const Vector2& aV) const
+    Number operator^(const Vector2& aV) const
     {
-        // TODO think
-        return Vector2();
+        return mX * aV.mY - mY * aV.mX;
     }
 
     void operator^=(const Vector2& aV)
     {
-        // TODO think
+        Number temp = mX;
+        mX = mX * aV.mY - mY * aV.mX;
+        mY = temp * aV.mY - mY * aV.mX;
     }
 
     // Dot product
@@ -63,9 +64,30 @@ public:
         mY *= aNum;
     }
 
+    Vector2 operator-() const
+    {
+        return Vector2(-mX, -mY);
+    }
+
+    Vector2 operator/(const Number aNum) const
+    {
+        return Vector2(mX / aNum, mY / aNum);
+    }
+
+    void operator/=(const Number aNum)
+    {
+        mX /= aNum;
+        mY /= aNum;
+    }
+
     bool operator==(const Vector2& aV) const
     {
         return mX == aV.mX && mY == aV.mY;
+    }
+
+    operator std::pair<T, T>() const
+    {
+        return std::make_pair(mX, mY);
     }
 
     const Number len() const
@@ -73,9 +95,20 @@ public:
         return sqrt(mX * mX + mY * mY);
     }
 
-    void normalize();
+    void normalize()
+    {
+        Number norm_val = norm();
+        if (norm_val != 0)
+        {
+            mX /= norm_val;
+            mY /= norm_val;
+        }
+    }
 
-    const Number norm() const;
+    const Number norm() const
+    {
+        return len();
+    }
     
 private:
     T mX, mY;
